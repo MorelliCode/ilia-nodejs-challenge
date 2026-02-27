@@ -1,0 +1,19 @@
+{
+  "name": "ilia-nodejs-challenge",
+  "version": "1.0.0",
+  "description": "A simple digital wallet api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MorelliCode/ilia-nodejs-challenge.git"
+  },
+  "author": "MorelliCode",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MorelliCode/ilia-nodejs-challenge/issues"
+  },
+  "homepage": "https://github.com/MorelliCode/ilia-nodejs-challenge#readme"
+}
