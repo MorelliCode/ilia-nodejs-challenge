@@ -37,7 +37,7 @@ const authenticateToken = (request, response, next) => {
 const initDb = async () => {
   await db.query(`
     CREATE TABLE IF NOT EXISTS transactions (
-      id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       user_id VARCHAR(255) NOT NULL,
       amount INTEGER NOT NULL,
       type VARCHAR(10) CHECK (type IN ('CREDIT', 'DEBIT')) NOT NULL,
@@ -49,3 +49,23 @@ const initDb = async () => {
 initDb();
 
 // Routes
+// POST /transactions
+app.post('/transactions', authenticateToken, async (request, response) => {
+    const user_id = request.body.user_id;
+    const amount = request.body.amount;
+    const type = request.body.type;
+
+    if (!user_id || !amount || !type) {
+        return response.status(400).json({ error: 'Missing one or more required fields: user_id, amount, type' });
+    };
+
+    try {
+        const result = await db.query(
+            'INSERT INTO transactions (user_id, amount, type) VALUES ($1, $2, $3) RETURNING *',
+            [user_id, amount, type]
+        );
+        response.status(201).json(result.rows[0]);
+    } catch (error) {
+        response.status(500).json({ error: 'Database Error' });
+    }
+});
