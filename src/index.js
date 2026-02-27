@@ -37,7 +37,7 @@ const authenticateToken = (request, response, next) => {
 const initDb = async () => {
   await db.query(`
     CREATE TABLE IF NOT EXISTS transactions (
-      id SERIAL PRIMARY KEY,
+      id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
       user_id VARCHAR(255) NOT NULL,
       amount INTEGER NOT NULL,
       type VARCHAR(10) CHECK (type IN ('CREDIT', 'DEBIT')) NOT NULL,
