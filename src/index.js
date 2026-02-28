@@ -58,8 +58,16 @@ app.post('/transactions', authenticateToken, async (request, response) => {
         return response.status(400).json({ error: 'Missing one or more required fields: user_id, amount, type' });
     };
 
+    if (typeof type !== 'string') {
+        return response.status(400).json({ error: 'Transaction type must be a string' });
+    };
+
     if (type.toUpperCase() !== 'CREDIT' && type.toUpperCase() !== 'DEBIT') {
         return response.status(400).json({ error: 'Invalid transaction type. Must be either CREDIT or DEBIT' });
+    };
+
+    if (typeof user_id !== 'string') {
+        return response.status(400).json({ error: 'User ID must be a string' });
     };
 
     if(typeof amount !== 'number' || amount <= 0) {
