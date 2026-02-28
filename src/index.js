@@ -93,7 +93,7 @@ app.get('/transactions', authenticateToken, async (request, response) => {
         return response.status(400).json({ error: 'Transaction type filter must be a string' });
     };
 
-    if (type.toUpperCase() !== 'CREDIT' && type.toUpperCase() !== 'DEBIT') {
+    if (type &&type.toUpperCase() !== 'CREDIT' && type.toUpperCase() !== 'DEBIT') {
         return response.status(400).json({ error: 'Invalid transaction type filter. Must be either CREDIT or DEBIT' });
     };
 
