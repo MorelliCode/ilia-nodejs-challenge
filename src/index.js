@@ -64,8 +64,25 @@ app.post('/transactions', authenticateToken, async (request, response) => {
             'INSERT INTO transactions (user_id, amount, type) VALUES ($1, $2, $3) RETURNING *',
             [user_id, amount, type]
         );
-        response.status(201).json(result.rows[0]);
+        response.status(200).json(result.rows[0]);
     } catch (error) {
         response.status(500).json({ error: 'Database Error' });
-    }
+    };
+});
+
+// GET /transactions
+app.get('/transactions', authenticateToken, async (request, response) => {
+    const type = request.query.type;
+
+    try {
+        let result;
+        if (type) {
+            result = await db.query('SELECT * FROM transactions WHERE type = $1', [type]);
+        } else {
+            result = await db.query('SELECT * FROM transactions');
+        }
+        response.status(200).json(result.rows);
+    } catch (error) {
+        response.status(500).json({ error: 'Database Error' });
+    };
 });
