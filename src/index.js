@@ -1,36 +1,15 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const db = require('./database');
-require('dotenv').config();
-
+const { authenticateToken } = require('./middlewares/auth');
 
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3001;
-const SECRET = process.env.JWT_PRIVATE_KEY
 
 
 console.log('Wallet service starting...');
 
-// Middleware to authenticate tokens
-const authenticateToken = (request, response, next) => {
-    const authHeader = request.headers['authorization'];
-
-    let token;
-    if (authHeader) {
-        token = authHeader.split(' ')[1];
-    };
-
-    if (!token) {
-        return response.status(401).json({ error: 'Access token is missing or invalid' });
-    };
-
-    jwt.verify(token, SECRET, (err, user) => {
-        if (err) {return response.status(401).json({ error: 'Access token is missing or invalid' })};
-        next();
-    })
-}
 
 
 // Initialize database
