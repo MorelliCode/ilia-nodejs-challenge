@@ -103,7 +103,7 @@ app.get('/balance', authenticateToken, async (request, response) => {
             amount = 0;
         }
 
-        response.status(200).json({ amount });
+        response.status(200).json({ amount: parseInt(amount) });
     } catch (error) {
         response.status(500).json({ error: 'Calculation Error' });
     };
