@@ -13,7 +13,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    # volumes:
+    # volumes:       # If you would like to persist the database data, uncomment this section
     #   - db_data:/var/lib/postgresql/data
 
   app:
