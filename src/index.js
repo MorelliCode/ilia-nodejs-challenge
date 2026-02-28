@@ -46,7 +46,6 @@ const initDb = async () => {
   `);
 };
 
-initDb();
 
 // Routes
 // POST /transactions
@@ -86,3 +85,22 @@ app.get('/transactions', authenticateToken, async (request, response) => {
         response.status(500).json({ error: 'Database Error' });
     };
 });
+
+
+// Start the server
+const startServer = async () => {
+    try {
+        console.log('Connecting to database and initializing...');
+        await initDb();
+        console.log('Database initialized successfully.');
+
+        app.listen(PORT, () => {
+            console.log(`Wallet service is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error('FAILED to start service:', error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
