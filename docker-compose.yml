@@ -8,6 +8,11 @@ services:
       POSTGRES_DB: wallet_db
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_admin -d wallet_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     # volumes:
     #   - db_data:/var/lib/postgresql/data
 
@@ -21,4 +26,5 @@ services:
       - DATABASE_URL=postgres://user_admin:secret_password@db:5432/wallet_db
       - JWT_PRIVATE_KEY=ILIACHALLENGE
     depends_on:
-      - db
+      db:
+        condition: service_healthy
