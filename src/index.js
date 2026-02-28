@@ -52,13 +52,13 @@ const initDb = async () => {
 app.post('/transactions', authenticateToken, async (request, response) => {
     const user_id = request.body.user_id;
     const amount = request.body.amount;
-    const type = request.body.type.toUpperCase();
+    const type = request.body.type;
 
     if (!user_id || !amount || !type) {
         return response.status(400).json({ error: 'Missing one or more required fields: user_id, amount, type' });
     };
 
-    if (type !== 'CREDIT' && type !== 'DEBIT') {
+    if (type.toUpperCase() !== 'CREDIT' && type.toUpperCase() !== 'DEBIT') {
         return response.status(400).json({ error: 'Invalid transaction type. Must be either CREDIT or DEBIT' });
     };
 
@@ -69,7 +69,7 @@ app.post('/transactions', authenticateToken, async (request, response) => {
     try {
         const result = await db.query(
             'INSERT INTO transactions (user_id, amount, type) VALUES ($1, $2, $3) RETURNING *',
-            [user_id, amount, type]
+            [user_id, amount, type.toUpperCase()]
         );
         response.status(200).json(result.rows[0]);
     } catch (error) {
