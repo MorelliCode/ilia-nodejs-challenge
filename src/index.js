@@ -76,7 +76,7 @@ app.get('/transactions', authenticateToken, async (request, response) => {
     try {
         let result;
         if (type) {
-            result = await db.query('SELECT * FROM transactions WHERE type = $1', [type]);
+            result = await db.query('SELECT * FROM transactions WHERE type = $1', [type.toUpperCase()]);
         } else {
             result = await db.query('SELECT * FROM transactions');
         }
@@ -86,6 +86,28 @@ app.get('/transactions', authenticateToken, async (request, response) => {
     };
 });
 
+
+// GET /balance
+app.get('/balance', authenticateToken, async (request, response) => {
+    try {
+        const query = `
+            SELECT
+                SUM(CASE WHEN type = 'CREDIT' THEN amount ELSE 0 END) -
+                SUM(CASE WHEN type = 'DEBIT' THEN amount ELSE 0 END) AS amount
+            FROM transactions
+        `;
+        const result = await db.query(query);
+
+        let { amount } = result.rows[0];
+        if (amount === null) {
+            amount = 0;
+        }
+
+        response.status(200).json({ amount });
+    } catch (error) {
+        response.status(500).json({ error: 'Calculation Error' });
+    };
+});
 
 // Start the server
 const startServer = async () => {
