@@ -81,6 +81,10 @@ app.post('/transactions', authenticateToken, async (request, response) => {
 app.get('/transactions', authenticateToken, async (request, response) => {
     const type = request.query.type;
 
+    if (typeof type !== 'undefined' && type.toUpperCase() !== 'CREDIT' && type.toUpperCase() !== 'DEBIT') {
+        return response.status(400).json({ error: 'Invalid transaction type filter. Must be either CREDIT or DEBIT' });
+    };
+
     try {
         let result;
         if (type) {
