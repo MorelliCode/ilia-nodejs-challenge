@@ -52,10 +52,18 @@ const initDb = async () => {
 app.post('/transactions', authenticateToken, async (request, response) => {
     const user_id = request.body.user_id;
     const amount = request.body.amount;
-    const type = request.body.type;
+    const type = request.body.type.toUpperCase();
 
     if (!user_id || !amount || !type) {
         return response.status(400).json({ error: 'Missing one or more required fields: user_id, amount, type' });
+    };
+
+    if (type !== 'CREDIT' && type !== 'DEBIT') {
+        return response.status(400).json({ error: 'Invalid transaction type. Must be either CREDIT or DEBIT' });
+    };
+
+    if(typeof amount !== 'number' || amount <= 0) {
+        return response.status(400).json({ error: 'Amount must be a positive integer' });
     };
 
     try {
