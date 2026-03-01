@@ -82,7 +82,7 @@ Calculates and returns the consolidated balance (Total Credits - Total Debits).
     "amount": 500
   }
   ```
-#### Example (curl) - List only CREDIT transactions
+#### Example (curl)
 ```bash
 curl -X GET http://localhost:3001/balance \
 -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
