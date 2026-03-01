@@ -1,3 +1,102 @@
+# Microservice Wallet API
+
+A Dockerized Node.js service for managing financial transactions.
+
+## Technologies Used:
+- **Node.js & Express:** Core API framework.
+- **PostgreSQL:**  Relational database for transaction storage.
+- **Docker & Docker Compose:** Containerization and service orchestration.
+- **JSON Web Token (JWT):** Authentication.
+
+## Setup and Installation
+
+1. **You MUST have Docker installed on your machine**
+	1. [Installation instructions](https://docs.docker.com/engine/install/)
+2. Clone this repository:
+```bash
+	  git clone git@github.com:MorelliCode/ilia-nodejs-challenge.git
+	  cd ilia-nodejs-challenge
+```
+3. Start the services:
+```bash
+	  docker compose up --build
+```
+*This will start the PostgreSQL database, run the health checks, initialize the tables, and start the Node app on port 3001.*
+
+## Authentication
+
+All routes are protected. You must provide a valid JWT in the `Authorization` header. You can generate a test token at [jwt.io](https://jwt.io) (click on "**JWT Encoder**") using `ILIACHALLENGE` as the secret key (no need to change other values).
+
+**Header Format**
+`Authorization: Bearer <your_token_here>`
+
+---
+
+## API Endpoints
+
+### 1. Create a Transaction
+**POST** `/transactions`
+
+Creates a new transaction (Credit or Debit).
+* **Body (JSON):**
+  ```json
+  {
+    "user_id": "string", // Must be a string
+    "amount": 1500,  // Must be a positive integer
+    "type": "CREDIT" // Must be "CREDIT" or "DEBIT"
+  }
+  ```
+#### Example (curl)
+```bash
+curl -X POST http://localhost:3001/transactions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -d '{
+    "user_id": "user_123",
+    "amount": 900,
+    "type": "CREDIT"
+  }'
+```
+### 2. List Transactions
+**GET** `/transactions`
+
+Returns a list of all transactions.
+* **Optional Query Parameter:** `?type=CREDIT` or `?type=DEBIT` to filter results.
+#### Example (curl) - List all transactions
+```bash
+curl -X GET http://localhost:3001/transactions \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+#### Example (curl) - List only CREDIT transactions
+```bash
+curl -X GET http://localhost:3001/transactions?type=CREDIT \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+### 3. Get Account Balance
+**GET** `/balance`
+
+Calculates and returns the consolidated balance (Total Credits - Total Debits).
+* **Response:**
+  ```json
+  {
+    "amount": 500
+  }
+  ```
+#### Example (curl) - List only CREDIT transactions
+```bash
+curl -X GET http://localhost:3001/balance \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+## Troubleshooting
+If you encounter problems, it is most likely that an old Docker volume is holding stale data. Run this command to start fresh:
+```bash
+docker-compose down -v
+docker-compose up --build
+```
+
+---
+
 # ília - Code Challenge NodeJS
 **English**
 ##### Before we start ⚠️
@@ -13,7 +112,7 @@ The first part is mandatory, which is to create a Wallet microservice to store t
 ### General Instructions:
 ## Part 1 - Wallet Microservice
 
-This microservice must be a digital Wallet where the user transactions will be stored 
+This microservice must be a digital Wallet where the user transactions will be stored
 
 ### The Application must have
 
@@ -22,7 +121,7 @@ This microservice must be a digital Wallet where the user transactions will be s
     - This Microservice must receive HTTP Request.
     - Have a dedicated database (Postgres, MySQL, Mongo, DynamoDB, ...).
     - JWT authentication on all routes (endpoints) the PrivateKey must be ILIACHALLENGE (passed by env var).
-    - Configure the Microservice port to 3001. 
+    - Configure the Microservice port to 3001.
     - Gitflow applied with Code Review in each step, open a feature/branch, create at least one pull request and merge it with Main(master deprecated), this step is important to simulate a team work and not just a commit.
 
 ## Part 2 - Microservice Users and Wallet Integration
@@ -31,10 +130,10 @@ This microservice must be a digital Wallet where the user transactions will be s
 
     - Project setup documentation (readme.md).
     - Application and Database running on a container (Docker, ...).
-    - This Microservice must receive HTTP Request.   
+    - This Microservice must receive HTTP Request.
     - Have a dedicated database(Postgres, MySQL, Mongo, DynamoDB...), you may use an Auth service like AWS Cognito.
     - JWT authentication on all routes (endpoints) the PrivateKey must be ILIACHALLENGE (passed by env var).
-    - Set the Microservice port to 3002. 
+    - Set the Microservice port to 3002.
     - Gitflow applied with Code Review in each step, open a feature/branch, create at least one pull request and merge it with Main(master deprecated), this step is important to simulate a teamwork and not just a commit.
     - Internal Communication Security (JWT, SSL, ...), if it is JWT the PrivateKey must be ILIACHALLENGE_INTERNAL (passed by env var).
     - Communication between Microservices using any of the following: gRPC, REST, Kafka or via Messaging Queues (update your readme with the instructions to run if using a Docker/Container environment).
@@ -50,7 +149,7 @@ You may implement the solution using React, Vue, or Angular, following the requi
 ### Before you start ⚠️
 
 - **Create a separate folder for the Frontend project**
-- Frontend must be built in **Typescript**.  
+- Frontend must be built in **Typescript**.
 - The goal is to deliver a production-like UI that consumes the backend services:
   - Wallet Service (port **3001**)
   - Users Service (port **3002**, optional but mandatory for Senior)
@@ -71,7 +170,7 @@ No visual prototype or UI mockups will be provided for this challenge on purpose
 
 Feel free to leverage on any opensource components library.
 
-### Requirements 
+### Requirements
 This frontend should reflect real-world practices:
 - secure JWT handling
 - clean UX flows
