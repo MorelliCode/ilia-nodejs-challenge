@@ -91,8 +91,8 @@ curl -X GET http://localhost:3001/balance \
 ## Troubleshooting
 If you encounter problems, it is most likely that an old Docker volume is holding stale data. Run this command to start fresh:
 ```bash
-docker-compose down -v
-docker-compose up --build
+docker compose down -v
+docker compose up --build
 ```
 
 ---
