@@ -6,14 +6,16 @@ services:
       POSTGRES_USER: user_admin
       POSTGRES_PASSWORD: secret_password
       POSTGRES_DB: wallet_db
-    ports:
-      - "5432:5432"
+    # Uncomment the following section for Debug purposes
+    # ports:
+    #   - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user_admin -d wallet_db"]
       interval: 5s
       timeout: 5s
       retries: 5
-    # volumes:       # If you would like to persist the database data, uncomment this section
+    # If you would like to persist the database data, uncomment the following section
+    # volumes:
     #   - db_data:/var/lib/postgresql/data
 
   app:
@@ -23,7 +25,7 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - DATABASE_URL=postgres://user_admin:secret_password@db:5432/wallet_db
+      - DATABASE_URL=postgres://user_admin:secret_password@db:5432/wallet_db  # If you have changed the database credentials, update this URL accordingly
       - JWT_PRIVATE_KEY=ILIACHALLENGE
     depends_on:
       db:
